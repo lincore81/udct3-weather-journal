@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const PORT = 5173;
-const API_ROUTE = '/api'
+const API_ROUTE = '/api';
 
 /**
  * @typedef {{text: string, temperature: number, date: string}} ProjectData temperature in celsius
@@ -12,13 +12,13 @@ const API_ROUTE = '/api'
 let projectData = {};
 
 /**
- * @param {string} str 
+ * @param {string} str
  * @returns {boolean}
  */
 const isValidDateString = str => (new Date(str)).toString() !== "Invalid Date";
 
 // We're not savages
-const verifyData = (/** @type {ProjectData} */ data) => 
+const verifyData = (/** @type {ProjectData} */ data) =>
     data
     && data.text && typeof data.text === `string`
     && data.temperature && isFinite(data.temperature)
@@ -38,7 +38,7 @@ app.use(express.static('website'));
 // Routing
 app.get(API_ROUTE, (_, res) => {
     console.log("Asking for project data:", projectData);
-    res.send(projectData)
+    res.send(projectData);
 });
 app.post(API_ROUTE, (req, res) => {
     console.log(req.body);

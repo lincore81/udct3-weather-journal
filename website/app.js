@@ -11,7 +11,7 @@ import countries from './countries.js';
 
 ////////////// APIs ////////////
 
-const KEY = window.atob(`NzJjZGRlZTU5ODg2ZWQ2Zjg0YTM0ZWQyZmQyMTJmNTU=`);
+const KEY = `72cddee59886ed6f84a34ed2fd212f55`;
 const WEATHER_API = `https://api.openweathermap.org/data/2.5/weather`;
 const GEOCODE_API = `https://api.openweathermap.org/geo/1.0/zip`;
 const JOURNAL_API = "/api";
@@ -46,7 +46,7 @@ const getRecentEntry = async () => {
     console.log("Journal entry from server:", json);
     json.date = new Date(json.date);
     return json;
-}
+};
 
 const postRecentEntry = async (/** @type {JournalEntry} */ entry) => 
     fetch(JOURNAL_API, {
@@ -83,11 +83,10 @@ const main = () => {
     const zipInput = document.querySelector("#zip");
     /** @type {HTMLTextAreaElement | null} */
     const journalTextarea = document.querySelector("#feelings");
-
-    const allGood = !!(form && zipInput && countrySelect && journalTextarea)
+    const allGood = !!(form && zipInput && countrySelect && journalTextarea);
 
     getRecentEntry().then(entry => {
-        if (entry) applyEntry(entry); 
+        if (entry && entry.text) applyEntry(entry); 
     });
     if (allGood) {
         form.onsubmit = e => {
@@ -117,7 +116,6 @@ const main = () => {
  * @param {JournalEntry | undefined=} entry 
  */
 const applyEntry = entry => {
-    if (entry && !entry.text) entry == undefined;
     const recentDate = document.querySelector("#date");
     const recentTemp = document.querySelector("#temp");
     const recentEntry = document.querySelector("#content");
@@ -126,14 +124,14 @@ const applyEntry = entry => {
     if (!(recentDate && recentTemp && recentEntry && entryHolder && error)) {
         return false;
     }
-    entryHolder.classList.toggle("hidden", !entry || !entry.text);
+    entryHolder.classList.toggle("hidden", !entry);
     error.classList.toggle("hidden", !!entry);
     if (entry) {
         recentDate.textContent = entry.date.toLocaleString();
         recentTemp.textContent = `${entry.temperature} °C`;                
         recentEntry.textContent = entry.text;
     }
-}
+};
 
 /**
  * Enable non-us citizens to use this app:
@@ -149,7 +147,7 @@ const populateCountrySelect = select => {
         elem.setAttribute("value", code);
         select.appendChild(elem);
     })
-}
+};
 
 /**
  * 
@@ -168,6 +166,6 @@ const submitJournalEntry = async (/** @type {ZipInfo} */ location, /** @type {st
     /** @type {JournalEntry} */
     const entry = {date, temperature: weatherReport.main.temp, text: text};
     return postRecentEntry(entry);
-}
+};
 
 main();
